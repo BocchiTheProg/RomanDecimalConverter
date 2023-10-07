@@ -24,6 +24,22 @@ module RomanDecimal
     res
   end
 
+  def self.to_roman(decimal)
+    res = ""
+    keys_arr = ROMAN_ARABIC.keys
+    i = keys_arr.size
+    loop do
+      i -= 1
+      break if i < 0
+      loop do
+        break if decimal < ROMAN_ARABIC[keys_arr[i]]
+        res += keys_arr[i].to_s
+        decimal -= ROMAN_ARABIC[keys_arr[i]]
+      end
+    end
+    res
+  end
+
   def self.find_value(char)
     ROMAN_ARABIC.each do |key, value|
       return value if key.to_s == char
