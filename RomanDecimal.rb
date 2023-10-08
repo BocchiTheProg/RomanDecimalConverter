@@ -1,48 +1,39 @@
 module RomanDecimal
-  ROMAN_ARABIC = {I: 1, IV: 4, V: 5, IX: 9, X: 10, XL: 40, L: 50, XC: 90, C: 100, CD: 400, D: 500, CM: 900, M: 1000}
+  ROMAN_ARABIC = {"I" => 1,
+                  "IV" => 4,
+                  "V" => 5,
+                  "IX" => 9,
+                  "X" => 10,
+                  "XL" => 40,
+                  "L" => 50,
+                  "XC" => 90,
+                  "C" => 100,
+                  "CD" => 400,
+                  "D" => 500,
+                  "CM" => 900,
+                  "M" => 1000}
 
   def self.to_decimal(roman)
     res = 0
-    i = 0
-    loop do
-      break if i >= roman.size
-      n1 = self.find_value(roman[i].upcase)
-      if i+1 >= roman.size
-        res += n1
-        break
+    roman.each_char.with_index do |char, i|
+      if i < roman.size - 1 and ROMAN_ARABIC[char] < ROMAN_ARABIC[roman[i+1]]
+        res -= ROMAN_ARABIC[char]
       else
-        n2 = self.find_value(roman[i+1].upcase)
-        if n1 >= n2
-          res += n1
-        else
-          res += n2 - n1
-          i += 1
-        end
+        res += ROMAN_ARABIC[char]
       end
-      i += 1
     end
     res
   end
 
   def self.to_roman(decimal)
     res = ""
-    keys_arr = ROMAN_ARABIC.keys
-    i = keys_arr.size
-    loop do
-      i -= 1
-      break if i < 0
+    ROMAN_ARABIC.keys.reverse_each do |key|
       loop do
-        break if decimal < ROMAN_ARABIC[keys_arr[i]]
-        res += keys_arr[i].to_s
-        decimal -= ROMAN_ARABIC[keys_arr[i]]
+        break if decimal < ROMAN_ARABIC[key]
+        res += key
+        decimal -= ROMAN_ARABIC[key]
       end
     end
     res
-  end
-
-  def self.find_value(char)
-    ROMAN_ARABIC.each do |key, value|
-      return value if key.to_s == char
-    end
   end
 end
